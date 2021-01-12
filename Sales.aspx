@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="PurchaseWholesale.aspx.cs" Inherits="Purchase_PurchaseWholesale" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Sales.aspx.cs" Inherits="Purchase_Sales" %>
 
 <!DOCTYPE html>
 
@@ -9,13 +9,12 @@
 <body>
     <form id="form1" runat="server">
         <div>
-              
-            Invoice:
+             Bill NO:
             <asp:TextBox ID="txtInvoice" runat="server"></asp:TextBox><br />
-            Supplier:
-            <asp:DropDownList runat="server" ID="ddlSupplier" AutoPostBack="true" OnSelectedIndexChanged="ddlSupplier_SelectedIndexChanged">
+            
+            
                 
-            </asp:DropDownList><br />
+            
             Date:
             <asp:TextBox ID="txtDate" runat="server" TextMode="Date"></asp:TextBox><br />
             Item:
@@ -37,6 +36,7 @@
 
         
         </div>
+       
     </form>
 </body>
 </html>

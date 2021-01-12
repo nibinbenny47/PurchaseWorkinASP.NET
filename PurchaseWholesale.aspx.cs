@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -210,7 +205,7 @@ public partial class Purchase_PurchaseWholesale : System.Web.UI.Page
         foreach (DataRow dr in dt1.Rows)
         {
 
-            string insQry1 = "insert into tbl_purchaseDetails(ph_id,item_id,pd_quantity,pd_rate) values('" + Session["phid"] + "','" + ddlItem.SelectedValue + "','" + txtQuantity.Text + "','" + txtRate.Text + "')";
+            string insQry1 = "insert into tbl_purchaseDetails(ph_id,item_id,pd_quantity,pd_rate) values('" + Session["phid"] + "','" + Convert.ToInt32(dr["Item"]) + "','" + Convert.ToInt32(dr["Quantity"]) + "','" + Convert.ToInt32(dr["Rate"]) + "')";
             cmd1 = new SqlCommand(insQry1, con);
             cmd1.ExecuteNonQuery();
         }
