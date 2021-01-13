@@ -11,7 +11,7 @@ public partial class Purchase_Sales : System.Web.UI.Page
     string connectionstring = "Data Source =.; Initial Catalog = db_purchase; Integrated Security = True";
     SqlConnection con;
     SqlCommand cmd;
-    SqlCommand cmd1;
+    SqlCommand cmd1,cmd2;
     public static int qnty, rate, total;
     public static int temp = 0;
     protected void Page_Load(object sender, EventArgs e)
@@ -147,10 +147,49 @@ public partial class Purchase_Sales : System.Web.UI.Page
 
         foreach (DataRow dr in dt1.Rows)
         {
+            //checking if the item is available in the stock and if so checking if the availble quantity greater than the user requested quantity
+            string selQrystock = "select * from tbl_stock where item_id= '" + Convert.ToInt32(dr["Item"]) + "'";
+            SqlDataAdapter adp1 = new SqlDataAdapter(selQrystock, con);
+            DataTable dt2 = new DataTable();
+            adp1.Fill(dt2);
+            lblsaleQnty.Text = Convert.ToInt32(dr["Quantity"]).ToString();
+            int salesqnty = Convert.ToInt32(lblsaleQnty.Text);
 
-            string insQry1 = "insert into tbl_salesDetails(sales_id,item_id,sd_quantity,sd_rate) values('" + Session["sid"] + "','" + Convert.ToInt32(dr["Item"]) + "','" + Convert.ToInt32(dr["Quantity"]) + "','" + Convert.ToInt32(dr["Rate"]) + "')";
-            cmd1 = new SqlCommand(insQry1, con);
-            cmd1.ExecuteNonQuery();
+
+            if (dt2.Rows.Count > 0)
+            {
+                lblQuantity.Text = dt2.Rows[0]["stock_quantity"].ToString();
+                int qnty = Convert.ToInt32(lblQuantity.Text);
+
+                if(salesqnty <= qnty) 
+                {
+                    string insQry1 = "insert into tbl_salesDetails(sales_id,item_id,sd_quantity,sd_rate) values('" + Session["sid"] + "','" + Convert.ToInt32(dr["Item"]) + "','" + Convert.ToInt32(dr["Quantity"]) + "','" + Convert.ToInt32(dr["Rate"]) + "')";
+                    cmd1 = new SqlCommand(insQry1, con);
+                    cmd1.ExecuteNonQuery();
+
+                    int availableQnty = Convert.ToInt32(qnty - salesqnty);
+
+                    string upQrystock = "update tbl_stock set stock_quantity= '"+availableQnty+"' where item_id= '"+ Convert.ToInt32(dr["Item"]) + "'";
+                    cmd2 = new SqlCommand(upQrystock, con);
+                    cmd2.ExecuteNonQuery();
+                }
+                else
+                {
+                    Response.Write("<script>alert('sorry out of stock!!')</script>");
+                }
+            }
+            else
+            {
+                Response.Write("<script>alert('Sorry !! no such item in the stock')</script>");
+            }
+
+
+
+            //string insQry1 = "insert into tbl_salesDetails(sales_id,item_id,sd_quantity,sd_rate) values('" + Session["sid"] + "','" + Convert.ToInt32(dr["Item"]) + "','" + Convert.ToInt32(dr["Quantity"]) + "','" + Convert.ToInt32(dr["Rate"]) + "')";
+            //cmd1 = new SqlCommand(insQry1, con);
+            //cmd1.ExecuteNonQuery();
+
+            //string upQrystock = "update tbl_stock set stock_quantity = '" + Convert.ToInt32(dr["Quantity"]) + "'";
         }
     }
 }

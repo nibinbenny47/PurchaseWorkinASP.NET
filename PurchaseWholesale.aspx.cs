@@ -7,7 +7,7 @@ public partial class Purchase_PurchaseWholesale : System.Web.UI.Page
     string connectionstring = "Data Source =.; Initial Catalog = db_purchase; Integrated Security = True";
     SqlConnection con;
     SqlCommand cmd;
-    SqlCommand cmd1;
+    SqlCommand cmd1,cmd2;
     public static int qnty, rate, total;
     public static int temp = 0;
     protected void Page_Load(object sender, EventArgs e)
@@ -193,6 +193,8 @@ public partial class Purchase_PurchaseWholesale : System.Web.UI.Page
         cmd = new SqlCommand(insQry, con);
         cmd.ExecuteNonQuery();
 
+       
+
 
         string selQry = "select max(ph_id) as headID from tbl_purchaseHead";
         SqlDataAdapter adp = new SqlDataAdapter(selQry, con);
@@ -208,6 +210,10 @@ public partial class Purchase_PurchaseWholesale : System.Web.UI.Page
             string insQry1 = "insert into tbl_purchaseDetails(ph_id,item_id,pd_quantity,pd_rate) values('" + Session["phid"] + "','" + Convert.ToInt32(dr["Item"]) + "','" + Convert.ToInt32(dr["Quantity"]) + "','" + Convert.ToInt32(dr["Rate"]) + "')";
             cmd1 = new SqlCommand(insQry1, con);
             cmd1.ExecuteNonQuery();
+
+            string insQrystock = "insert into tbl_stock(stock_quantity,item_id) values('" + Convert.ToInt32(dr["Quantity"]) + "','" + Convert.ToInt32(dr["Item"]) + "')";
+            cmd2 = new SqlCommand(insQrystock, con);
+            cmd2.ExecuteNonQuery();
         }
     }
 }
