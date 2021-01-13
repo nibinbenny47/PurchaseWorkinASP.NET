@@ -32,6 +32,8 @@
             </asp:GridView><br />
             GrandTotal:<asp:TextBox ID="txtGrandTotal" runat="server"></asp:TextBox><br />
             <asp:Button ID="btnSubmit" runat="server" Text="Submit" OnClick="btnSubmit_Click" />
+            <asp:Label ID="lblAvailQnty" runat="server" Visible="false"></asp:Label>
+            <asp:Label ID="lblGivenQnty" runat="server" Visible="false"></asp:Label>
             
             
 

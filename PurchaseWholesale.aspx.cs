@@ -211,9 +211,32 @@ public partial class Purchase_PurchaseWholesale : System.Web.UI.Page
             cmd1 = new SqlCommand(insQry1, con);
             cmd1.ExecuteNonQuery();
 
-            string insQrystock = "insert into tbl_stock(stock_quantity,item_id) values('" + Convert.ToInt32(dr["Quantity"]) + "','" + Convert.ToInt32(dr["Item"]) + "')";
-            cmd2 = new SqlCommand(insQrystock, con);
-            cmd2.ExecuteNonQuery();
+            //update stock table when same item added again,the stock quantity of that item should increase 
+            string selQrystock = "select * from tbl_stock where item_id= '" + Convert.ToInt32(dr["Item"]) + "'";
+            SqlDataAdapter adp1 = new SqlDataAdapter(selQrystock, con);
+            DataTable dt2 = new DataTable();
+            adp1.Fill(dt2);
+             if(dt2.Rows.Count > 0)
+            {
+                 
+                lblAvailQnty.Text= dt2.Rows[0]["stock_quantity"].ToString();
+                lblGivenQnty.Text = Convert.ToInt32(dr["Quantity"]).ToString();
+                int availQnty = Convert.ToInt32(lblAvailQnty.Text);
+                int givenQnty = Convert.ToInt32(lblGivenQnty.Text);
+                int newQnty = Convert.ToInt32(availQnty + givenQnty );
+
+                string upQrystock = "update tbl_stock set stock_quantity= '" + newQnty + "' where item_id= '" + Convert.ToInt32(dr["Item"]) + "'";
+                cmd2 = new SqlCommand(upQrystock, con);
+                cmd2.ExecuteNonQuery();
+            }
+             else
+            {
+                string insQrystock = "insert into tbl_stock(stock_quantity,item_id) values('" + Convert.ToInt32(dr["Quantity"]) + "','" + Convert.ToInt32(dr["Item"]) + "')";
+                cmd2 = new SqlCommand(insQrystock, con);
+                cmd2.ExecuteNonQuery();
+            }
+
+
         }
     }
 }
